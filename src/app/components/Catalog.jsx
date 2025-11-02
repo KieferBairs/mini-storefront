@@ -8,17 +8,20 @@ import CartSummary from "./CartSummary";
 import StatusMessage from "./StatusMessage";
 
 export default function Catalog() {
-
-    //Status
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    //Data
     const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
-
-    //Filters
-    const [category, setCategory] = useState("All");
+    const [category, setCategory] = useState('All');
     const [maxPrice, setMaxPrice] = useState("");
+    const [cart, setCart] = useState({});
+    const [status, setStatus] = useState("loading");
 
+    // Fetch products from the API
+    useEffect(() => {
+        fetch('/api/products')
+            .then(response => response.json())
+            .then(data => {
+                setProducts(data);
+                setStatus("success");
+            })
+            .catch(() => setStatus("error"));
+    }, []);
     

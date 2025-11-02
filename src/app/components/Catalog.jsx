@@ -28,7 +28,7 @@ export default function Catalog() {
     // Stock Simulation Effect
     useEffect(() => {
         const id = setInterval(() => {
-            set Products((prev) => 
+            setProducts((prev) => 
                 prev.map((p) => 
                     Math.random() < 0.2 && p.stock > 0
                         ? { ...p, stock: p.stock - 1 }
@@ -63,5 +63,30 @@ export default function Catalog() {
             )
         );
     };
-        }            
+    
+    return (
+        <div className="space-y-4">
+        <div className="flex gap-4">
+            <CategoryFilter
+              value={category}
+              options={["All", ...new Set(products.map((p) => p.category))]}
+                onChange={setCategory}
+            />
+            <PriceFilter value={maxPrice} onChange={setMaxPrice} />
+        </div>
+
+        {status === "loading" && <StatusMessage type="loading" message="Loading products..." />}
+        {status === "error" && <StatusMessage type="error" message="Failed to load products." />}
+        {status === "ready" && filtered.length === 0 && (
+            <StatusMessage type="empty" message="No products match the selected filters." />
+        )}
+
+        {status === "ready" && filtered.length > 0 && (
+            <ProductList products={filtered} onAddToCart={addToCart} />
+        )}
+
+        <CartSummary cart={cart} products={products} onReset={() => setCart([])} /> 
+    </div>
+    );
+}     
 

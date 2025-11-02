@@ -50,4 +50,18 @@ export default function Catalog() {
     const addToCart = (prod) => {
         if (prod.stock === 0) return;
         setCart((prev) => {
-            
+            const exists =prev.find((i) => i.id === prod.id);
+            return exists 
+                ? prev.map((i) =>
+                    i.id === prod.id ? { ...i, qty: i.qty + 1 } : i
+                )
+                : [...prev, { id: prod.id, qty: 1 }];
+        });
+        setProducts((prev) =>
+            prev.map((p) =>
+                p.id === prod.id ? { ...p, stock: p.stock - 1 } : p
+            )
+        );
+    };
+        }            
+

@@ -24,4 +24,30 @@ export default function Catalog() {
             })
             .catch(() => setStatus("error"));
     }, []);
-    
+
+    // Stock Simulation Effect
+    useEffect(() => {
+        const id = setInterval(() => {
+            set Products((prev) => 
+                prev.map((p) => 
+                    Math.random() < 0.2 && p.stock > 0
+                        ? { ...p, stock: p.stock - 1 }
+                        : p
+                )
+            );
+        }, 5000);
+        return () => clearInterval(id);
+    }, []);
+
+    // Filter
+    const filtered = products.filter((p) => {
+        const catOk = category === 'All' || p.category === category;
+        const price0K = !maxPrice || p.price <= Number(maxPrice);
+        return catOk && price0K;
+    });
+
+    // Cart Logic
+    const addToCart = (prod) => {
+        if (prod.stock === 0) return;
+        setCart((prev) => {
+            
